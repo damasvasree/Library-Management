@@ -1,0 +1,1211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BiblioSphere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#f5f4f0;
+--bg2:#eeecea;
+--bg3:#e7e4e0;
+--surface:#ffffff;
+--surface2:#fafaf8;
+--surface3:#f2f0ec;
+--border:#d4d0ca;
+--border2:#c0bbb3;
+--border3:#a8a29a;
+--text:#1a1814;
+--text2:#3d3830;
+--text3:#7a7268;
+--text4:#a09890;
+--accent:#2563eb;
+--accent2:#1d4ed8;
+--accent-bg:#eff6ff;
+--accent-border:#bfdbfe;
+--teal:#0d9488;
+--teal-bg:#f0fdfa;
+--coral:#dc2626;
+--coral-bg:#fef2f2;
+--amber:#b45309;
+--amber-bg:#fffbeb;
+--green:#15803d;
+--green-bg:#f0fdf4;
+--pink:#be185d;
+--pink-bg:#fdf2f8;
+--purple:#7c3aed;
+--purple-bg:#f5f3ff;
+--r:12px;--r2:8px;--r3:18px;
+--font-display:'Outfit',sans-serif;
+--font-body:'Outfit',sans-serif;
+--font-serif:'Fraunces',serif;
+--font-mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:14px;line-height:1.5;}
+.app{display:flex;height:100vh;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:230px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.logo-area{padding:18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.logo-icon{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px;color:#fff;}
+.logo-text{font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+.logo-text span{color:var(--accent);}
+.sidebar-nav{flex:1;padding:10px 8px;overflow-y:auto;scrollbar-width:none;}
+.nav-section{margin-bottom:18px;}
+.nav-label{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.09em;padding:0 8px;margin-bottom:5px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r2);cursor:pointer;transition:all .12s;color:var(--text3);margin-bottom:1px;}
+.nav-item:hover{background:var(--bg2);color:var(--text);}
+.nav-item.active{background:var(--accent-bg);color:var(--accent);font-weight:600;}
+.nav-icon{width:17px;height:17px;flex-shrink:0;font-size:15px;display:flex;align-items:center;justify-content:center;}
+.nav-text{font-size:13px;font-weight:500;}
+.nav-badge{margin-left:auto;background:var(--coral);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px;}
+.sidebar-footer{padding:10px 8px;border-top:1px solid var(--border);}
+.user-card{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r);background:var(--bg2);cursor:pointer;border:1px solid var(--border);}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.user-name{font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-role{font-size:10px;color:var(--text3);}
+.role-chip{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border);flex-shrink:0;}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.topbar{height:54px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
+.page-title{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text);white-space:nowrap;}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:6px 11px;flex:1;max-width:380px;cursor:pointer;transition:border-color .15s;}
+.search-box:hover{border-color:var(--border2);}
+.search-placeholder{color:var(--text4);font-size:12px;flex:1;}
+.topbar-actions{display:flex;align-items:center;gap:7px;}
+.icon-btn{width:32px;height:32px;border-radius:var(--r2);background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);transition:all .12s;font-size:15px;position:relative;}
+.icon-btn:hover{background:var(--bg3);color:var(--text);border-color:var(--border2);}
+.notif-dot{position:absolute;top:5px;right:5px;width:5px;height:5px;background:var(--coral);border-radius:50%;border:1.5px solid var(--surface);}
+.content{flex:1;overflow-y:auto;padding:20px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;transition:border-color .15s;}
+.card:hover{border-color:var(--border2);}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .15s;}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.stat-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:16px;}
+.stat-label{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+.stat-value{font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--text);line-height:1;}
+.stat-change{font-size:11px;margin-top:5px;display:flex;align-items:center;gap:3px;font-weight:500;}
+.up{color:var(--green);}
+.down{color:var(--coral);}
+
+/* GRIDS */
+.grid-2{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:18px;}
+@media(max-width:1100px){.grid-2{grid-template-columns:1fr;}}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r2);font-family:var(--font-body);font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .12s;letter-spacing:.01em;}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent2);}
+.btn-primary:hover{background:var(--accent2);}
+.btn-outline{background:var(--surface);border-color:var(--border2);color:var(--text2);}
+.btn-outline:hover{background:var(--bg2);border-color:var(--border3);color:var(--text);}
+.btn-sm{padding:5px 11px;font-size:11px;}
+.btn-ghost{background:transparent;border:none;color:var(--text3);padding:5px 9px;font-size:12px;}
+.btn-ghost:hover{color:var(--text);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase;}
+.badge-blue{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border);}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid #bbf7d0;}
+.badge-red{background:var(--coral-bg);color:var(--coral);border:1px solid #fecaca;}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid #fde68a;}
+.badge-teal{background:var(--teal-bg);color:var(--teal);border:1px solid #99f6e4;}
+.badge-purple{background:var(--purple-bg);color:var(--purple);border:1px solid #ddd6fe;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{text-align:left;padding:9px 13px;color:var(--text4);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);background:var(--bg2);}
+td{padding:11px 13px;border-bottom:1px solid var(--border);color:var(--text2);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg2);}
+
+/* BOOK GRID */
+.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;}
+.book-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .15s;}
+.book-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.06);}
+.book-cover{height:170px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;background:var(--bg2);}
+.book-status-pill{position:absolute;top:7px;right:7px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;}
+.book-info{padding:11px;}
+.book-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.book-author{font-size:11px;color:var(--text4);}
+.book-rating{display:flex;align-items:center;gap:2px;font-size:11px;color:var(--amber);margin-top:5px;}
+
+/* ACTIVITY */
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.act-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.activity-text{font-size:12px;color:var(--text2);line-height:1.5;}
+.activity-text strong{color:var(--text);font-weight:600;}
+.activity-time{font-size:10px;color:var(--text4);margin-top:1px;}
+
+/* PROGRESS */
+.progress-bar{background:var(--bg3);border-radius:20px;height:5px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:20px;}
+
+/* CHART AREA */
+.chart-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text);}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+
+/* AI CHAT */
+.chat-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.msg{max-width:85%;display:flex;flex-direction:column;gap:3px;}
+.msg.user{align-self:flex-end;align-items:flex-end;}
+.msg.ai{align-self:flex-start;}
+.msg-bubble{padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.6;}
+.msg.user .msg-bubble{background:var(--accent);color:#fff;border-bottom-right-radius:3px;}
+.msg.ai .msg-bubble{background:var(--surface);color:var(--text);border-bottom-left-radius:3px;border:1px solid var(--border);}
+.msg-time{font-size:10px;color:var(--text4);}
+.typing-indicator{display:flex;gap:3px;align-items:center;padding:9px 13px;background:var(--surface);border-radius:14px;border-bottom-left-radius:3px;border:1px solid var(--border);width:fit-content;}
+.typing-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;animation:tb 1.2s infinite;}
+.typing-dot:nth-child(2){animation-delay:.2s;}
+.typing-dot:nth-child(3){animation-delay:.4s;}
+@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+.chat-input-area{padding:14px 18px;border-top:1px solid var(--border);background:var(--surface2);}
+.chat-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:9px 13px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;resize:none;transition:border-color .15s;height:38px;}
+.chat-input:focus{border-color:var(--accent);}
+.send-btn{width:38px;height:38px;border-radius:var(--r2);background:var(--accent);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .12s;flex-shrink:0;}
+.send-btn:hover{background:var(--accent2);}
+.suggestion-chip{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--text3);cursor:pointer;transition:all .12s;font-weight:500;}
+.suggestion-chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.modal-header{padding:22px 22px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.modal-body{padding:18px 22px 22px;}
+.close-btn{width:26px;height:26px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);font-size:13px;}
+.close-btn:hover{background:var(--bg3);}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:18px;right:18px;display:flex;flex-direction:column;gap:7px;z-index:2000;}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;gap:9px;min-width:260px;font-size:12px;font-weight:500;animation:slideIn .25s ease;box-shadow:0 4px 20px rgba(0,0,0,.08);}
+@keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.success{border-left:3px solid var(--green);}
+.toast.warning{border-left:3px solid var(--amber);}
+.toast.error{border-left:3px solid var(--coral);}
+.toast.info{border-left:3px solid var(--accent);}
+.toast-close{margin-left:auto;cursor:pointer;color:var(--text4);font-size:13px;}
+
+/* SEARCH MODAL */
+.search-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);width:580px;max-width:95vw;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.12);}
+.search-modal-input{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);}
+.search-modal-input input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15px;font-family:var(--font-display);font-weight:500;}
+.search-results{padding:8px 0;max-height:380px;overflow-y:auto;}
+.search-result-item{display:flex;align-items:center;gap:11px;padding:9px 18px;cursor:pointer;transition:background .1s;}
+.search-result-item:hover{background:var(--bg2);}
+.kbd{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:var(--font-mono);font-size:10px;color:var(--text3);}
+
+/* CAT PILLS */
+.cat-pill{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border);cursor:pointer;transition:all .12s;color:var(--text3);background:var(--surface);}
+.cat-pill.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.cat-pill:hover:not(.active){border-color:var(--border2);color:var(--text);}
+
+/* TOGGLE */
+.toggle{width:34px;height:18px;background:var(--bg3);border-radius:9px;cursor:pointer;position:relative;transition:background .2s;border:1px solid var(--border);}
+.toggle.on{background:var(--accent);border-color:var(--accent2);}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15);}
+.toggle.on::after{transform:translateX(16px);}
+
+/* NOTIF */
+.notif-item{display:flex;gap:11px;padding:11px 15px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.notif-item:hover{background:var(--bg2);}
+.notif-item.unread{background:var(--accent-bg);}
+.unread-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;margin-top:5px;flex-shrink:0;}
+
+/* FORM */
+.form-group{margin-bottom:14px;}
+.form-label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
+.form-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:8px 11px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.08);}
+.form-input::placeholder{color:var(--text4);}
+.form-select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:8px 11px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer;}
+
+/* AUTH */
+.auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:36px;width:390px;max-width:95vw;box-shadow:0 4px 32px rgba(0,0,0,.06);}
+.auth-title{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--text);margin-bottom:3px;}
+.auth-subtitle{font-size:13px;color:var(--text3);margin-bottom:24px;}
+.divider{display:flex;align-items:center;gap:9px;margin:18px 0;font-size:11px;color:var(--text4);}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:9px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;font-family:var(--font-body);margin-bottom:8px;}
+.social-btn:hover{background:var(--bg2);border-color:var(--border2);}
+
+/* LANDING */
+.landing{min-height:100vh;background:var(--bg);overflow-y:auto;}
+.landing-nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 36px;background:rgba(245,244,240,.95);border-bottom:1px solid var(--border);}
+.hero{padding:72px 40px 60px;text-align:center;background:var(--bg);}
+.hero-label{display:inline-flex;align-items:center;gap:6px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:20px;padding:4px 13px;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:18px;text-transform:uppercase;letter-spacing:.05em;}
+.hero-title{font-family:var(--font-serif);font-size:clamp(34px,5.5vw,62px);font-weight:700;line-height:1.1;color:var(--text);margin-bottom:18px;}
+.hero-title em{font-style:italic;color:var(--accent);}
+.hero-subtitle{font-size:16px;color:var(--text3);max-width:520px;margin:0 auto 28px;line-height:1.7;font-weight:400;}
+.hero-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:44px;}
+.hero-stat-num{font-family:var(--font-display);font-size:26px;font-weight:800;color:var(--text);}
+.hero-stat-label{font-size:11px;color:var(--text4);margin-top:1px;font-weight:500;}
+.features-section{padding:56px 40px;max-width:1200px;margin:0 auto;}
+.section-eyebrow{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;}
+.section-title{font-family:var(--font-serif);font-size:clamp(22px,3.5vw,36px);font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.2;}
+.section-subtitle{font-size:14px;color:var(--text3);max-width:480px;line-height:1.7;margin-bottom:36px;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;transition:all .15s;}
+.feature-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.feature-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px;}
+.feature-title{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.feature-desc{font-size:12px;color:var(--text3);line-height:1.6;}
+.pricing-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:26px;transition:all .15s;}
+.pricing-card.featured{border:2px solid var(--accent);background:var(--accent-bg);}
+.pricing-name{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.pricing-price{font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.landing-footer{padding:28px 40px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:var(--surface);}
+
+/* MISC */
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);}
+.settings-label{font-size:13px;color:var(--text);font-weight:500;}
+.settings-sublabel{font-size:11px;color:var(--text4);margin-top:1px;}
+.settings-section-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.breadcrumb{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text4);margin-bottom:14px;font-weight:500;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+.ai-book-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s;margin-bottom:7px;}
+.ai-book-card:hover{border-color:var(--accent);background:var(--accent-bg);}
+.ai-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-weight:600;}
+.ai-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.report-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;align-items:flex-start;gap:14px;cursor:pointer;transition:all .15s;}
+.report-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const BOOKS=[
+  {id:1,title:"The Age of AI",author:"Henry Kissinger",category:"Technology",cover:"🤖",status:"available",rating:4.5,year:2021,pages:272,isbn:"9780316273800",shelf:"A-12",desc:"An essential examination of how AI is transforming global affairs, society, and human cognition.",tags:["AI","Technology","Policy"],borrows:142},
+  {id:2,title:"Atomic Habits",author:"James Clear",category:"Self-Help",cover:"⚛️",status:"issued",rating:4.8,year:2018,pages:320,isbn:"9780735211292",shelf:"B-05",desc:"Transform your life with tiny changes that lead to remarkable results through proven habit-building frameworks.",tags:["Habits","Psychology","Productivity"],borrows:289},
+  {id:3,title:"Dune",author:"Frank Herbert",category:"Science Fiction",cover:"🌙",status:"available",rating:4.9,year:1965,pages:896,isbn:"9780441013593",shelf:"C-22",desc:"The epic saga of a desert planet and the prophecy of a young man destined to lead its people.",tags:["Sci-Fi","Epic","Classic"],borrows:198},
+  {id:4,title:"Sapiens",author:"Yuval Noah Harari",category:"History",cover:"🧬",status:"reserved",rating:4.7,year:2011,pages:443,isbn:"9780062316097",shelf:"D-08",desc:"A brief history of humankind from the Stone Age through the modern era.",tags:["History","Anthropology","Science"],borrows:231},
+  {id:5,title:"The Pragmatic Programmer",author:"David Thomas",category:"Programming",cover:"💻",status:"available",rating:4.6,year:2019,pages:352,isbn:"9780135957059",shelf:"E-15",desc:"Your journey to mastery in software development through practical wisdom and timeless practices.",tags:["Programming","Software","Engineering"],borrows:167},
+  {id:6,title:"Think Again",author:"Adam Grant",category:"Psychology",cover:"🧠",status:"available",rating:4.4,year:2021,pages:307,isbn:"9781984878106",shelf:"F-03",desc:"The power of knowing what you don't know and the art of rethinking your assumptions.",tags:["Psychology","Thinking","Growth"],borrows:121},
+  {id:7,title:"The Lean Startup",author:"Eric Ries",category:"Business",cover:"🚀",status:"issued",rating:4.3,year:2011,pages:336,isbn:"9780307887894",shelf:"G-17",desc:"How today's entrepreneurs use continuous innovation to create radically successful businesses.",tags:["Business","Startup","Innovation"],borrows:178},
+  {id:8,title:"Deep Work",author:"Cal Newport",category:"Productivity",cover:"🎯",status:"available",rating:4.6,year:2016,pages:296,isbn:"9781455586691",shelf:"H-09",desc:"Rules for focused success in a distracted world — the ability to focus without distraction is a superpower.",tags:["Productivity","Focus","Work"],borrows:203},
+  {id:9,title:"Project Hail Mary",author:"Andy Weir",category:"Science Fiction",cover:"🪐",status:"available",rating:4.9,year:2021,pages:476,isbn:"9780593135204",shelf:"C-31",desc:"A lone astronaut must save Earth — but first he has to remember who he is.",tags:["Sci-Fi","Space","Adventure"],borrows:156},
+  {id:10,title:"Educated",author:"Tara Westover",category:"Memoir",cover:"📚",status:"reserved",rating:4.7,year:2018,pages:334,isbn:"9780399590504",shelf:"I-14",desc:"A memoir about a woman who grows up in a survivalist family and eventually makes her way to Cambridge.",tags:["Memoir","Education","Family"],borrows:134},
+  {id:11,title:"The Midnight Library",author:"Matt Haig",category:"Fiction",cover:"🌌",status:"available",rating:4.5,year:2020,pages:288,isbn:"9780525559474",shelf:"J-06",desc:"Between life and death there is a library with books of every life you could have lived.",tags:["Fiction","Fantasy","Life"],borrows:189},
+  {id:12,title:"Clean Code",author:"Robert C. Martin",category:"Programming",cover:"🔧",status:"issued",rating:4.4,year:2008,pages:431,isbn:"9780132350884",shelf:"E-08",desc:"A handbook of agile software craftsmanship for writing readable, maintainable code.",tags:["Programming","Best Practices","Engineering"],borrows:145},
+];
+
+const USERS=[
+  {id:1,name:"Arjun Sharma",email:"arjun@university.edu",role:"Student",avatar:"AS",color:"blue",status:"active",borrowed:3,fines:0,joined:"2023-08-15"},
+  {id:2,name:"Priya Nair",email:"priya@university.edu",role:"Faculty",avatar:"PN",color:"teal",status:"active",borrowed:1,fines:0,joined:"2021-06-01"},
+  {id:3,name:"Rahul Mehta",email:"rahul@university.edu",role:"Student",avatar:"RM",color:"red",status:"active",borrowed:2,fines:50,joined:"2023-08-20"},
+  {id:4,name:"Sunita Rao",email:"sunita@library.edu",role:"Librarian",avatar:"SR",color:"amber",status:"active",borrowed:0,fines:0,joined:"2020-01-10"},
+  {id:5,name:"Kiran Patel",email:"kiran@university.edu",role:"Student",avatar:"KP",color:"green",status:"suspended",borrowed:0,fines:150,joined:"2022-09-05"},
+  {id:6,name:"Meena Krishnan",email:"meena@university.edu",role:"Faculty",avatar:"MK",color:"purple",status:"active",borrowed:2,fines:0,joined:"2019-07-22"},
+];
+
+const ACTIVITIES=[
+  {type:"issue",user:"Arjun Sharma",book:"Atomic Habits",time:"2 min ago",color:"#2563eb"},
+  {type:"return",user:"Priya Nair",book:"Sapiens",time:"15 min ago",color:"#0d9488"},
+  {type:"overdue",user:"Rahul Mehta",book:"Clean Code",time:"1 hr ago",color:"#dc2626"},
+  {type:"reserve",user:"Meena Krishnan",book:"Dune",time:"2 hrs ago",color:"#b45309"},
+  {type:"register",user:"New Student",book:"",time:"3 hrs ago",color:"#15803d"},
+  {type:"fine",user:"Kiran Patel",book:"",time:"5 hrs ago",color:"#dc2626"},
+  {type:"issue",user:"Sunita Rao",book:"Deep Work",time:"Yesterday",color:"#7c3aed"},
+];
+
+const NOTIFICATIONS=[
+  {id:1,emoji:"⚠️",text:"<strong>Rahul Mehta</strong> has an overdue book: Clean Code (3 days late)",time:"2 hrs ago",unread:true},
+  {id:2,emoji:"📬",text:"<strong>5 new book requests</strong> are pending approval",time:"4 hrs ago",unread:true},
+  {id:3,emoji:"✅",text:"Bulk import of 48 books completed successfully",time:"Yesterday",unread:false},
+  {id:4,emoji:"💰",text:"Fine payment of ₹150 received from Kiran Patel",time:"Yesterday",unread:false},
+  {id:5,emoji:"🆕",text:"New user registration: Amit Kumar (Student)",time:"2 days ago",unread:false},
+  {id:6,emoji:"📊",text:"Monthly analytics report is ready for download",time:"3 days ago",unread:false},
+];
+
+let state={page:'landing',user:null,selectedBook:null,chatMessages:[],aiLoading:false,searchOpen:false,searchQuery:'',bookFilter:'All',settingsToggles:{emailNotif:true,smsAlert:false,overdueReminder:true,newBooks:true,darkMode:false,aiFeatures:true,autoFine:true,reservationAlert:true}};
+
+const CATS=['All','Technology','Science Fiction','Self-Help','History','Programming','Psychology','Business','Productivity','Fiction','Memoir'];
+
+function navigate(page,extra={}){state={...state,page,...extra};render();}
+
+function showToast(msg,type='success'){
+  const icons={success:'✓',error:'✕',warning:'!',info:'i'};
+  const colors={success:'var(--green)',error:'var(--coral)',warning:'var(--amber)',info:'var(--accent)'};
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<span style="color:${colors[type]};font-weight:700;font-size:14px;">${icons[type]}</span><span style="color:var(--text);">${msg}</span><span class="toast-close" onclick="this.parentElement.remove()">✕</span>`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(()=>t.remove(),4000);
+}
+
+function Stars(r){let s='';for(let i=1;i<=5;i++)s+=`<span style="color:${i<=Math.floor(r)?'#b45309':'#d4d0ca'}">★</span>`;return s;}
+
+async function askGrok(messages){
+  try{
+    const resp=await fetch('https://api.x.ai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer xai-demo-key'},
+      body:JSON.stringify({
+        model:'grok-2-latest',
+        messages:[
+          {role:'system',content:`You are BiblioSphere's AI Librarian powered by Grok. Help users find books, get recommendations, and answer library questions. Be concise and helpful. Library catalog includes: ${BOOKS.map(b=>b.title+' by '+b.author+' ('+b.status+')').join('; ')}.`},
+          ...messages
+        ],
+        max_tokens:500,temperature:0.7
+      })
+    });
+    if(!resp.ok)throw new Error('API error');
+    const data=await resp.json();
+    return data.choices[0].message.content;
+  }catch(e){
+    return "I can't connect to Grok AI right now. Add your API key in Settings. Meanwhile, here are some top picks:\n\n📚 **Atomic Habits** — Most borrowed this month\n🪐 **Project Hail Mary** — Highest rated sci-fi\n🧬 **Sapiens** — Best in History\n\nTry asking: *\"Find beginner AI books\"* or *\"Recommend books like Dune\"*";
+  }
+}
+
+async function sendChat(msg){
+  if(!msg.trim())return;
+  state.chatMessages=[...state.chatMessages,{role:'user',content:msg,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}];
+  state.aiLoading=true;render();
+  const el=document.getElementById('chatMsgs');if(el)el.scrollTop=el.scrollHeight;
+  const reply=await askGrok(state.chatMessages.map(m=>({role:m.role,content:m.content})));
+  state.chatMessages=[...state.chatMessages,{role:'assistant',content:reply,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}];
+  state.aiLoading=false;render();
+  const el2=document.getElementById('chatMsgs');if(el2)el2.scrollTop=el2.scrollHeight;
+}
+
+function renderLanding(){
+  return`<div class="landing">
+  <nav class="landing-nav">
+    <div style="display:flex;align-items:center;gap:9px;cursor:pointer;" onclick="navigate('landing')">
+      <div class="logo-icon">📚</div>
+      <span style="font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--text)">Biblio<span style="color:var(--accent)">Sphere</span></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;">
+      <span style="font-size:13px;color:var(--text3);cursor:pointer;font-weight:500;">Features</span>
+      <span style="font-size:13px;color:var(--text3);cursor:pointer;font-weight:500;">Pricing</span>
+      <span style="font-size:13px;color:var(--text3);cursor:pointer;font-weight:500;">Docs</span>
+      <button class="btn btn-outline btn-sm" onclick="navigate('login')">Sign in</button>
+      <button class="btn btn-primary btn-sm" onclick="navigate('login')">Get started →</button>
+    </div>
+  </nav>
+  <div class="hero">
+    <div class="hero-label">✦ AI-powered library platform</div>
+    <h1 class="hero-title">The <em>intelligent</em> library<br>for modern institutions</h1>
+    <p class="hero-subtitle">BiblioSphere combines AI-powered discovery, real-time analytics, and seamless management into one elegant platform trusted by 500+ institutions.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="navigate('login')" style="font-size:14px;padding:11px 26px;">Start free trial →</button>
+      <button class="btn btn-outline" style="font-size:14px;padding:11px 26px;" onclick="navigate('login')">View live demo</button>
+    </div>
+    <div style="display:flex;justify-content:center;gap:48px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--border);max-width:500px;margin:0 auto;">
+      ${[['500+','Institutions'],['2M+','Books managed'],['99.9%','Uptime SLA'],['4.9★','Rating']].map(([n,l])=>`<div style="text-align:center;"><div class="hero-stat-num">${n}</div><div class="hero-stat-label">${l}</div></div>`).join('')}
+    </div>
+  </div>
+  <div style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="features-section">
+      <div class="section-eyebrow">Platform Features</div>
+      <h2 class="section-title">Everything your library needs</h2>
+      <p class="section-subtitle">From AI-powered recommendations to automated fine collection — one platform handles it all.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;">
+        ${[
+          {icon:'🤖',bg:'var(--accent-bg)',title:'AI Librarian',desc:'Natural language search and conversational AI powered by Grok that understands what patrons are really looking for.'},
+          {icon:'📊',bg:'var(--teal-bg)',title:'Real-time Analytics',desc:'Live dashboards with borrowing trends, user engagement, and predictive insights for inventory planning.'},
+          {icon:'📱',bg:'var(--pink-bg)',title:'Mobile-First PWA',desc:'Progressive web app with offline support. Perfect experience on any device, anywhere, anytime.'},
+          {icon:'🔍',bg:'var(--amber-bg)',title:'Semantic Search',desc:'Vector-based search that understands meaning, not just keywords. Find the perfect book instantly.'},
+          {icon:'⚡',bg:'var(--green-bg)',title:'Auto Workflows',desc:'Automated overdue reminders, fine calculations, reservation queues, and email notifications.'},
+          {icon:'🔐',bg:'var(--purple-bg)',title:'Role-Based Access',desc:'Granular permissions for Super Admin, Librarian, Faculty, Student, and Guest roles.'},
+        ].map(f=>`<div class="feature-card">
+          <div class="feature-icon" style="background:${f.bg};">${f.icon}</div>
+          <div class="feature-title">${f.title}</div>
+          <div class="feature-desc">${f.desc}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="features-section">
+    <div style="text-align:center;margin-bottom:36px;">
+      <div class="section-eyebrow" style="text-align:center;">Pricing</div>
+      <h2 class="section-title" style="text-align:center;">Simple, transparent pricing</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;">
+      ${[
+        {name:'Starter',price:'₹4,999',period:'/mo',desc:'Perfect for small libraries',features:['Up to 5,000 books','3 staff accounts','Basic analytics','Email support'],featured:false},
+        {name:'Professional',price:'₹14,999',period:'/mo',desc:'For growing institutions',features:['Unlimited books','15 staff accounts','AI features','Priority support','Multi-branch'],featured:true},
+        {name:'Enterprise',price:'Custom',period:'',desc:'Large universities & networks',features:['Everything in Pro','Unlimited branches','Custom integrations','Dedicated SLA'],featured:false},
+      ].map(p=>`<div class="pricing-card${p.featured?' featured':''}">
+        ${p.featured?`<div class="badge badge-blue" style="margin-bottom:10px;">Most Popular</div>`:''}
+        <div class="pricing-name">${p.name}</div>
+        <div class="pricing-price">${p.price}<span style="font-size:13px;font-weight:400;color:var(--text3);">${p.period}</span></div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:16px;">${p.desc}</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:18px;">
+          ${p.features.map(f=>`<div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2);"><span style="color:var(--green);font-weight:700;">✓</span>${f}</div>`).join('')}
+        </div>
+        <button class="btn ${p.featured?'btn-primary':'btn-outline'}" style="width:100%;justify-content:center;" onclick="navigate('login')">Get started</button>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div style="background:var(--surface);border-top:1px solid var(--border);text-align:center;padding:64px 40px;">
+    <h2 style="font-family:var(--font-serif);font-size:clamp(22px,4vw,38px);font-weight:700;color:var(--text);margin-bottom:14px;">Ready to modernize your library?</h2>
+    <p style="font-size:14px;color:var(--text3);margin-bottom:24px;max-width:420px;margin-left:auto;margin-right:auto;">Join 500+ institutions already delivering exceptional library experiences.</p>
+    <button class="btn btn-primary" onclick="navigate('login')" style="font-size:14px;padding:12px 28px;">Start your free 30-day trial →</button>
+  </div>
+  <footer class="landing-footer">
+    <div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)">Biblio<span style="color:var(--accent)">Sphere</span></div>
+    <div style="display:flex;gap:18px;">${['Privacy','Terms','Contact','Status'].map(l=>`<span style="font-size:12px;color:var(--text4);cursor:pointer;">${l}</span>`).join('')}</div>
+    <div style="font-size:12px;color:var(--text4);">© 2025 BiblioSphere</div>
+  </footer>
+</div>`;
+}
+
+function renderLogin(){
+  return`<div class="auth-page">
+  <div class="auth-card">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:22px;cursor:pointer;" onclick="navigate('landing')">
+      <div class="logo-icon">📚</div>
+      <span style="font-family:var(--font-display);font-size:16px;font-weight:800;">Biblio<span style="color:var(--accent)">Sphere</span></span>
+    </div>
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-subtitle">Sign in to your library dashboard</div>
+    <button class="social-btn" onclick="loginAs('admin')">
+      <span style="font-size:16px;font-weight:900;font-family:sans-serif;color:#4285f4;">G</span> Continue with Google
+    </button>
+    <div class="divider">or continue with email</div>
+    <div class="form-group">
+      <label class="form-label">Email address</label>
+      <input class="form-input" type="email" value="admin@library.edu">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" value="password123">
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);cursor:pointer;font-weight:500;"><input type="checkbox" checked> Remember me</label>
+      <span style="font-size:12px;color:var(--accent);cursor:pointer;font-weight:600;">Forgot password?</span>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px;font-size:13px;" onclick="loginAs('admin')">Sign in →</button>
+    <div style="margin-top:18px;text-align:center;font-size:12px;color:var(--text4);">
+      Quick demo: 
+      <span style="color:var(--accent);cursor:pointer;font-weight:600;" onclick="loginAs('admin')">Admin</span> · 
+      <span style="color:var(--teal);cursor:pointer;font-weight:600;" onclick="loginAs('librarian')">Librarian</span> · 
+      <span style="color:var(--purple);cursor:pointer;font-weight:600;" onclick="loginAs('student')">Student</span>
+    </div>
+  </div>
+</div>`;
+}
+
+function loginAs(role){
+  const roles={
+    admin:{name:'Dr. Kavitha Menon',role:'Super Admin',email:'kavitha@library.edu',avatar:'KM'},
+    librarian:{name:'Sunita Rao',role:'Librarian',email:'sunita@library.edu',avatar:'SR'},
+    student:{name:'Arjun Sharma',role:'Student',email:'arjun@university.edu',avatar:'AS'},
+  };
+  state.user=roles[role];
+  navigate('dashboard');
+  showToast(`Welcome back, ${state.user.name}!`,'success');
+}
+
+function renderApp(content){
+  const nav=[
+    {section:'Main',items:[{id:'dashboard',icon:'📊',label:'Dashboard'},{id:'books',icon:'📚',label:'Books'},{id:'ai',icon:'🤖',label:'AI Assistant'},{id:'analytics',icon:'📈',label:'Analytics'}]},
+    {section:'Management',items:[{id:'users',icon:'👥',label:'Users',badge:'6'},{id:'issue',icon:'🔄',label:'Issue & Return'},{id:'reports',icon:'📋',label:'Reports'},{id:'notifications',icon:'🔔',label:'Notifications',badge:'2'}]},
+    {section:'System',items:[{id:'settings',icon:'⚙️',label:'Settings'},{id:'help',icon:'❓',label:'Help Center'}]},
+  ];
+  const titles={dashboard:'Dashboard',books:'Books',ai:'AI Assistant',analytics:'Analytics',users:'User Management',issue:'Issue & Return',reports:'Reports',notifications:'Notifications',settings:'Settings',help:'Help Center'};
+  return`<div class="app">
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-icon" onclick="navigate('landing')" style="cursor:pointer;">📚</div>
+      <div class="logo-text">Biblio<span>Sphere</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      ${nav.map(s=>`<div class="nav-section">
+        <div class="nav-label">${s.section}</div>
+        ${s.items.map(i=>`<div class="nav-item ${state.page===i.id?'active':''}" onclick="navigate('${i.id}')">
+          <div class="nav-icon">${i.icon}</div>
+          <div class="nav-text">${i.label}</div>
+          ${i.badge?`<span class="nav-badge">${i.badge}</span>`:''}
+        </div>`).join('')}
+      </div>`).join('')}
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar" style="font-size:11px;">${state.user?.avatar||'?'}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="user-name">${state.user?.name||'Guest'}</div>
+          <div class="user-role">${state.user?.email||''}</div>
+        </div>
+        <span class="role-chip">${state.user?.role?.split(' ')[0]||'?'}</span>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="page-title">${titles[state.page]||'BiblioSphere'}</div>
+        <div class="search-box" onclick="openSearch()">
+          <span style="color:var(--text4);font-size:13px;">🔍</span>
+          <span class="search-placeholder">Search books, users…</span>
+          <span style="display:flex;gap:2px;"><span class="kbd">⌘</span><span class="kbd">K</span></span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="icon-btn" onclick="navigate('notifications')">🔔<div class="notif-dot"></div></div>
+        <div class="icon-btn" onclick="showToast('Analytics refreshed!','info')">🔄</div>
+        <div class="icon-btn" onclick="navigate('ai')">🤖</div>
+        <div class="avatar" style="cursor:pointer;width:32px;height:32px;font-size:11px;" onclick="navigate('settings')">${state.user?.avatar||'?'}</div>
+      </div>
+    </div>
+    <div class="content">${content}</div>
+  </div>
+  </div>
+  ${state.searchOpen?renderSearchModal():''}
+  ${state.selectedBook?renderBookModal():''}`;
+}
+
+function openSearch(){state.searchOpen=true;state.searchQuery='';render();setTimeout(()=>document.getElementById('globalSearch')?.focus(),50);}
+function closeSearch(e){if(!e||e.target.classList.contains('modal-overlay')){state.searchOpen=false;render();}}
+
+function renderSearchModal(){
+  const q=state.searchQuery.toLowerCase();
+  const results=q?BOOKS.filter(b=>b.title.toLowerCase().includes(q)||b.author.toLowerCase().includes(q)).slice(0,6):BOOKS.slice(0,5);
+  return`<div class="modal-overlay" onclick="closeSearch(event)">
+  <div class="search-modal" onclick="event.stopPropagation()">
+    <div class="search-modal-input">
+      <span style="font-size:16px;color:var(--text4);">🔍</span>
+      <input id="globalSearch" placeholder="Search books, authors, categories…" value="${state.searchQuery}" oninput="updateSearch(this.value)" style="background:none;border:none;outline:none;color:var(--text);font-size:15px;font-family:var(--font-display);font-weight:500;width:100%;">
+      <span style="font-size:11px;color:var(--text4);cursor:pointer;" onclick="closeSearch()">ESC</span>
+    </div>
+    <div class="search-results">
+      ${results.map(b=>`<div class="search-result-item" onclick="selectBook(${b.id})">
+        <div style="width:34px;height:34px;background:var(--bg2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${b.cover}</div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--text);">${b.title}</div><div style="font-size:11px;color:var(--text4);">${b.author} · ${b.category}</div></div>
+        <span class="badge ${b.status==='available'?'badge-green':b.status==='issued'?'badge-red':'badge-amber'}">${b.status}</span>
+      </div>`).join('')}
+    </div>
+    <div style="padding:9px 18px;border-top:1px solid var(--border);display:flex;gap:10px;font-size:10px;color:var(--text4);font-weight:500;">
+      <span>↑↓ Navigate</span><span>↵ Select</span><span>ESC Close</span>
+    </div>
+  </div>
+</div>`;
+}
+
+function updateSearch(v){
+  state.searchQuery=v;
+  const results=v?BOOKS.filter(b=>b.title.toLowerCase().includes(v.toLowerCase())||b.author.toLowerCase().includes(v.toLowerCase())):BOOKS.slice(0,5);
+  const c=document.querySelector('.search-results');
+  if(c)c.innerHTML=results.slice(0,6).map(b=>`<div class="search-result-item" onclick="selectBook(${b.id})">
+    <div style="width:34px;height:34px;background:var(--bg2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${b.cover}</div>
+    <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--text);">${b.title}</div><div style="font-size:11px;color:var(--text4);">${b.author}</div></div>
+    <span class="badge ${b.status==='available'?'badge-green':b.status==='issued'?'badge-red':'badge-amber'}">${b.status}</span>
+  </div>`).join('');
+}
+
+function selectBook(id){state.selectedBook=BOOKS.find(b=>b.id===id);state.searchOpen=false;state.page='books';render();}
+
+function renderBookModal(){
+  const b=state.selectedBook;if(!b)return'';
+  const bgMap={available:'#f0fdf4',issued:'#fef2f2',reserved:'#fffbeb'};
+  return`<div class="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><div></div><button class="close-btn" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div style="height:180px;background:${bgMap[b.status]||bgMap.available};border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:72px;margin-bottom:14px;border:1px solid var(--border);">${b.cover}</div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;">
+        <div>
+          <h2 style="font-family:var(--font-serif);font-size:20px;font-weight:700;color:var(--text);margin-bottom:3px;">${b.title}</h2>
+          <div style="font-size:13px;color:var(--text3);">by ${b.author}</div>
+        </div>
+        <span class="badge ${b.status==='available'?'badge-green':b.status==='issued'?'badge-red':'badge-amber'}">${b.status}</span>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">${b.tags.map(t=>`<span class="badge badge-blue">${t}</span>`).join('')}</div>
+      <p style="font-size:13px;color:var(--text3);line-height:1.7;margin-bottom:14px;">${b.desc}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;">
+        ${[['📅 Year',b.year],['📄 Pages',b.pages],['🏷️ ISBN',b.isbn],['📍 Shelf',b.shelf],['📂 Category',b.category],['📊 Borrows',b.borrows]].map(([l,v])=>`
+        <div style="background:var(--bg2);border-radius:var(--r2);padding:9px 11px;border:1px solid var(--border);">
+          <div style="font-size:10px;color:var(--text4);margin-bottom:2px;font-weight:600;">${l}</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">${v}</div>
+        </div>`).join('')}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px;">
+        <span style="font-size:13px;">${Stars(b.rating)}</span>
+        <span style="font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--text);">${b.rating}</span>
+        <span style="font-size:11px;color:var(--text4);">/5.0</span>
+      </div>
+      <div style="display:flex;gap:7px;">
+        ${b.status==='available'?`<button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="issueBook(${b.id})">📤 Issue Book</button>`:`<button class="btn btn-outline" style="flex:1;justify-content:center;" onclick="showToast('Added to reservation queue','info');closeModal()">📋 Reserve</button>`}
+        <button class="btn btn-outline" onclick="showToast('Added to wishlist!','info');closeModal()">❤️</button>
+        <button class="btn btn-outline" onclick="navigate('ai');closeModal()">🤖 Ask AI</button>
+      </div>
+    </div>
+  </div>
+</div>`;
+}
+
+function closeModal(e){if(!e||e.target.classList.contains('modal-overlay')){state.selectedBook=null;render();}}
+function issueBook(id){const b=BOOKS.find(x=>x.id===id);if(b)b.status='issued';state.selectedBook=null;render();showToast(`"${b.title}" issued! Due in 14 days.`,'success');}
+
+function renderDashboard(){
+  return`
+  <div class="breadcrumb"><span>Home</span> › <span>Dashboard</span></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div>
+      <h1 style="font-family:var(--font-serif);font-size:22px;font-weight:700;color:var(--text);">Good morning, ${state.user?.name?.split(' ')[0]} 👋</h1>
+      <p style="font-size:12px;color:var(--text3);margin-top:3px;font-weight:500;">Here's what's happening in your library today</p>
+    </div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-outline btn-sm" onclick="showToast('Report generated!','success')">📋 Report</button>
+      <button class="btn btn-primary btn-sm" onclick="navigate('books')">+ Add Book</button>
+    </div>
+  </div>
+  <div class="stats-grid">
+    ${[
+      {l:'Total Books',v:'12,847',c:'↑ 124 this month',up:true,icon:'📚',bg:'var(--accent-bg)'},
+      {l:'Available',v:'9,412',c:'73% of collection',up:true,icon:'✅',bg:'var(--green-bg)'},
+      {l:'Issued',v:'2,891',c:'↑ 48 today',up:true,icon:'📤',bg:'var(--teal-bg)'},
+      {l:'Overdue',v:'127',c:'↓ 12 from yesterday',up:false,icon:'⚠️',bg:'var(--coral-bg)'},
+      {l:'Fines Collected',v:'₹24,500',c:'↑ ₹3,200 this week',up:true,icon:'💰',bg:'var(--amber-bg)'},
+      {l:'Active Users',v:'1,248',c:'89 online now',up:true,icon:'👥',bg:'var(--purple-bg)'},
+    ].map(s=>`<div class="stat-card" onclick="navigate('analytics')">
+      <div class="stat-icon" style="background:${s.bg};">${s.icon}</div>
+      <div class="stat-label">${s.l}</div>
+      <div class="stat-value">${s.v}</div>
+      <div class="stat-change ${s.up?'up':'down'}">${s.c}</div>
+    </div>`).join('')}
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="chart-header">
+        <div class="chart-title">Monthly Borrowing Trend</div>
+        <div style="display:flex;gap:10px;font-size:11px;font-weight:600;">
+          <span style="display:flex;align-items:center;gap:4px;color:var(--text3);"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent);display:inline-block;"></span>2025</span>
+          <span style="display:flex;align-items:center;gap:4px;color:var(--text3);"><span style="width:8px;height:8px;border-radius:2px;background:var(--teal);display:inline-block;"></span>2024</span>
+        </div>
+      </div>
+      <div style="height:180px;position:relative;"><canvas id="borrowChart" role="img" aria-label="Monthly borrowing trend">Monthly 2025: Jan 42, Feb 67, Mar 55, Apr 89, May 91, Jun 84.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="chart-header"><div class="chart-title">Category Distribution</div></div>
+      <div style="height:180px;position:relative;"><canvas id="catChart" role="img" aria-label="Category distribution">Tech 18%, Fiction 15%, History 14%.</canvas></div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="chart-header"><div class="chart-title">Most Borrowed Books</div><button class="btn btn-ghost btn-sm" onclick="navigate('analytics')">View all →</button></div>
+      ${BOOKS.sort((a,b)=>b.borrows-a.borrows).slice(0,5).map((b,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);${i===4?'border-bottom:none;':''}">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text4);width:18px;font-weight:500;">${String(i+1).padStart(2,'0')}</div>
+        <div style="font-size:20px;">${b.cover}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.title}</div>
+          <div style="font-size:10px;color:var(--text4);">${b.author}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text);">${b.borrows}</div>
+          <div style="font-size:10px;color:var(--text4);">borrows</div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="chart-header"><div class="chart-title">Recent Activity</div><button class="btn btn-ghost btn-sm" onclick="navigate('notifications')">See all</button></div>
+      ${ACTIVITIES.map(a=>`<div class="activity-item">
+        <div class="act-dot" style="background:${a.color};"></div>
+        <div style="flex:1;">
+          <div class="activity-text"><strong>${a.user}</strong> ${a.type==='issue'?'borrowed':a.type==='return'?'returned':a.type==='overdue'?'has overdue':a.type==='reserve'?'reserved':a.type==='register'?'registered':'paid fine'} ${a.book?`"${a.book}"`:'account'}</div>
+          <div class="activity-time">${a.time}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="chart-header"><div class="chart-title">AI Insights</div><button class="btn btn-primary btn-sm" onclick="navigate('ai')">🤖 Ask AI →</button></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;">
+      ${[
+        {icon:'📈',bg:'var(--accent-bg)',title:'Demand Surge',desc:'Programming books trending up 34% this month. Consider adding more copies.'},
+        {icon:'⚠️',bg:'var(--coral-bg)',title:'Overdue Risk',desc:'23 books likely overdue in 3 days. Auto-reminders already sent.'},
+        {icon:'🎯',bg:'var(--teal-bg)',title:'Reading Patterns',desc:'CS students prefer AI/ML books. New shelf section curated.'},
+        {icon:'💡',bg:'var(--amber-bg)',title:'Acquisition Tip',desc:'3 requested titles missing. Recommend purchasing "LLM Engineering".'},
+      ].map(i=>`<div style="background:${i.bg};border-radius:var(--r2);padding:13px;border:1px solid var(--border);cursor:pointer;">
+        <div style="font-size:18px;margin-bottom:7px;">${i.icon}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;">${i.title}</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.5;">${i.desc}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderBooks(){
+  const filtered=state.bookFilter==='All'?BOOKS:BOOKS.filter(b=>b.category===state.bookFilter);
+  return`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <div>
+      <h1 style="font-family:var(--font-display);font-size:19px;font-weight:800;color:var(--text);">Book Catalog</h1>
+      <p style="font-size:11px;color:var(--text4);margin-top:2px;font-weight:500;">${BOOKS.length} total · ${BOOKS.filter(b=>b.status==='available').length} available</p>
+    </div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-outline btn-sm" onclick="showToast('CSV import dialog opened','info')">📁 Import CSV</button>
+      <button class="btn btn-primary btn-sm" onclick="showToast('Add book dialog opened','info')">+ Add Book</button>
+    </div>
+  </div>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px;">
+    ${CATS.map(c=>`<div class="cat-pill ${state.bookFilter===c?'active':''}" onclick="filterBooks('${c}')">${c}</div>`).join('')}
+  </div>
+  <div class="book-grid">
+    ${filtered.map(b=>`<div class="book-card" onclick="openBook(${b.id})">
+      <div class="book-cover">
+        <span>${b.cover}</span>
+        <div class="book-status-pill ${b.status==='available'?'badge-green':b.status==='issued'?'badge-red':'badge-amber'}" style="position:absolute;top:7px;right:7px;">${b.status}</div>
+      </div>
+      <div class="book-info">
+        <div class="book-title">${b.title}</div>
+        <div class="book-author">${b.author}</div>
+        <div class="book-rating">${Stars(b.rating)}<span style="color:var(--text4);margin-left:3px;font-size:10px;">${b.rating}</span></div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function filterBooks(cat){state.bookFilter=cat;render();}
+function openBook(id){state.selectedBook=BOOKS.find(b=>b.id===id);render();}
+
+function renderAI(){
+  const suggestions=['Find beginner AI books','Books similar to Dune','Recommend productivity reads','Top rated sci-fi?','What books are overdue?'];
+  return`<div style="display:flex;gap:14px;height:calc(100vh - 94px);">
+  <div style="flex:1;display:flex;flex-direction:column;background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;">
+    <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--surface);">
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;">🤖</div>
+      <div style="flex:1;">
+        <div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text);">BiblioAI Assistant</div>
+        <div style="font-size:11px;color:var(--text4);font-weight:500;">Powered by Grok — Your intelligent library companion</div>
+      </div>
+      <div class="ai-status">Online</div>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="msg ai">
+        <div class="msg-bubble">👋 Hello! I'm your AI Librarian powered by Grok. I can help you:<br><br>• 🔍 Find books by topic, mood, or description<br>• 📚 Get personalized recommendations<br>• 📊 Analyze borrowing patterns<br>• 🔎 Search semantically across the catalog<br><br>What are you looking for today?</div>
+        <div class="msg-time">Just now</div>
+      </div>
+      ${state.chatMessages.map(m=>`<div class="msg ${m.role==='user'?'user':'ai'}">
+        <div class="msg-bubble">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>
+        <div class="msg-time">${m.time||''}</div>
+      </div>`).join('')}
+      ${state.aiLoading?`<div class="msg ai"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`:''}
+    </div>
+    <div class="chat-input-area">
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px;">
+        ${suggestions.map(s=>`<div class="suggestion-chip" onclick="sendChat('${s}')">${s}</div>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px;">
+        <textarea class="chat-input" id="chatInput" placeholder="Ask anything about books, recommendations, catalog…" onkeydown="handleChatKey(event)"></textarea>
+        <button class="send-btn" onclick="submitChat()">➤</button>
+      </div>
+    </div>
+  </div>
+  <div style="width:250px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;">
+    <div class="card" style="padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:9px;text-transform:uppercase;letter-spacing:.05em;">📈 Trending Now</div>
+      ${BOOKS.sort((a,b)=>b.borrows-a.borrows).slice(0,4).map(b=>`<div class="ai-book-card" onclick="selectBook(${b.id})">
+        <div style="font-size:24px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border-radius:8px;flex-shrink:0;">${b.cover}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:11px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.title}</div>
+          <div style="font-size:10px;color:var(--text4);">${b.borrows} borrows</div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="card" style="padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:9px;text-transform:uppercase;letter-spacing:.05em;">🤖 AI Capabilities</div>
+      ${['Natural language search','Book recommendations','Similar book finder','Availability check','Reading list builder','Overdue analysis'].map(c=>`<div style="display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--text3);font-weight:500;"><span style="color:var(--green);font-weight:700;">✓</span>${c}</div>`).join('')}
+    </div>
+    <div class="card" style="padding:14px;background:var(--accent-bg);border-color:var(--accent-border);">
+      <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:5px;">⚡ Quick Action</div>
+      <p style="font-size:11px;color:var(--text3);margin-bottom:9px;">Get AI to summarize this week's activity</p>
+      <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;" onclick="sendChat('Generate a summary of this week\\'s library activity and top insights')">📊 Weekly Summary</button>
+    </div>
+  </div>
+</div>`;
+}
+
+function handleChatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitChat();}}
+function submitChat(){const i=document.getElementById('chatInput');if(i&&i.value.trim()){sendChat(i.value.trim());i.value='';}}
+
+function renderAnalytics(){
+  return`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div><h1 style="font-family:var(--font-display);font-size:19px;font-weight:800;color:var(--text);">Analytics & Insights</h1><p style="font-size:11px;color:var(--text4);margin-top:2px;font-weight:500;">Real-time library performance metrics</p></div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-outline btn-sm">📅 Last 30 days</button>
+      <button class="btn btn-primary btn-sm" onclick="showToast('Analytics exported!','success')">📥 Export</button>
+    </div>
+  </div>
+  <div class="stats-grid" style="margin-bottom:16px;">
+    ${[{l:'Total Borrows',v:'8,421',bg:'var(--accent-bg)'},{l:'Unique Readers',v:'1,248',bg:'var(--teal-bg)'},{l:'Books Added',v:'124',bg:'var(--green-bg)'},{l:'Fines Issued',v:'₹24,500',bg:'var(--amber-bg)'}].map(s=>`
+    <div class="stat-card"><div style="background:${s.bg};width:30px;height:30px;border-radius:8px;margin-bottom:8px;"></div><div class="stat-label">${s.l}</div><div class="stat-value">${s.v}</div></div>`).join('')}
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+    <div class="card">
+      <div class="chart-title" style="margin-bottom:12px;">Borrowing by Day of Week</div>
+      <div style="height:170px;position:relative;"><canvas id="weekChart" role="img" aria-label="Borrowing by weekday">Mon 45, Tue 67, Wed 89, Thu 72, Fri 55, Sat 38, Sun 20.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="chart-title" style="margin-bottom:12px;">Activity Heatmap (by Hour)</div>
+      <div style="display:grid;grid-template-columns:repeat(24,1fr);gap:2px;margin-top:8px;">
+        ${Array.from({length:24},(_,i)=>{const v=i<8||i>21?5:i<10||i>19?30:i<12||i>17?70:i===12||i===13?95:55;return`<div style="height:36px;border-radius:3px;background:var(--accent);opacity:${Math.round(v)/100};cursor:pointer;" title="${i}:00 — ${v} visits"></div>`;}).join('')}
+        <div style="grid-column:1/-1;display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--text4);font-weight:600;"><span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;margin-top:8px;font-size:10px;color:var(--text4);font-weight:500;">
+        <span>Low</span>${[.1,.3,.5,.7,.9].map(o=>`<div style="width:14px;height:7px;border-radius:2px;background:var(--accent);opacity:${o};"></div>`).join('')}<span>High</span>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+    <div class="card">
+      <div class="chart-title" style="margin-bottom:12px;">Top Borrowers This Month</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>User</th><th>Role</th><th>Borrowed</th><th>Fines</th><th>Status</th></tr></thead>
+          <tbody>${USERS.map(u=>`<tr>
+            <td><div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--${u.color==='blue'?'accent':u.color==='teal'?'teal':u.color==='red'?'coral':u.color==='amber'?'amber':u.color==='green'?'green':'purple'}-bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--${u.color==='blue'?'accent':u.color==='teal'?'teal':u.color==='red'?'coral':u.color==='amber'?'amber':u.color==='green'?'green':'purple'});">${u.avatar}</div>
+              <div><div style="font-size:12px;font-weight:600;color:var(--text);">${u.name}</div><div style="font-size:10px;color:var(--text4);">${u.email}</div></div>
+            </div></td>
+            <td><span class="badge ${u.role==='Faculty'?'badge-blue':u.role==='Librarian'?'badge-teal':'badge-purple'}">${u.role}</span></td>
+            <td><span style="font-family:var(--font-mono);font-size:12px;font-weight:600;">${u.borrowed}</span></td>
+            <td><span style="color:${u.fines>0?'var(--coral)':'var(--green)'};font-weight:600;font-size:12px;">₹${u.fines}</span></td>
+            <td><span class="badge ${u.status==='active'?'badge-green':'badge-red'}">${u.status}</span></td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="chart-title" style="margin-bottom:12px;">Collection Health</div>
+      ${[{l:'Available',v:73,c:'#15803d'},{l:'Issued',v:22,c:'#2563eb'},{l:'Reserved',v:3,c:'#b45309'},{l:'Overdue',v:1,c:'#dc2626'},{l:'Damaged',v:1,c:'#a09890'}].map(i=>`
+      <div style="margin-bottom:11px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;font-weight:600;">
+          <span style="color:var(--text2);">${i.l}</span><span style="color:var(--text);">${i.v}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${i.v}%;background:${i.c};"></div></div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderUsers(){
+  return`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div><h1 style="font-family:var(--font-display);font-size:19px;font-weight:800;color:var(--text);">User Management</h1><p style="font-size:11px;color:var(--text4);margin-top:2px;font-weight:500;">${USERS.length} registered users</p></div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-outline btn-sm">📁 Import</button>
+      <button class="btn btn-primary btn-sm" onclick="showToast('Add user dialog','info')">+ Add User</button>
+    </div>
+  </div>
+  <div class="stats-grid" style="margin-bottom:16px;">
+    ${[{l:'Total',v:'1,248',bg:'var(--accent-bg)'},{l:'Active',v:'1,189',bg:'var(--green-bg)'},{l:'Suspended',v:'12',bg:'var(--coral-bg)'},{l:'Pending',v:'47',bg:'var(--amber-bg)'}].map(s=>`
+    <div class="stat-card"><div style="background:${s.bg};width:28px;height:28px;border-radius:7px;margin-bottom:7px;"></div><div class="stat-label">${s.l}</div><div class="stat-value">${s.v}</div></div>`).join('')}
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:6px 10px;flex:1;max-width:280px;">
+        <span style="color:var(--text4);font-size:13px;">🔍</span>
+        <input style="background:none;border:none;outline:none;color:var(--text);font-size:12px;flex:1;font-family:var(--font-body);" placeholder="Search users…">
+      </div>
+      <select class="form-select" style="width:130px;font-size:11px;">
+        <option>All Roles</option><option>Student</option><option>Faculty</option><option>Librarian</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>User</th><th>Role</th><th>Borrowed</th><th>Fines</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>${USERS.map(u=>`<tr>
+          <td><div style="display:flex;align-items:center;gap:9px;">
+            <div style="width:30px;height:30px;border-radius:50%;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">${u.avatar}</div>
+            <div><div style="font-size:12px;font-weight:600;color:var(--text);">${u.name}</div><div style="font-size:10px;color:var(--text4);">${u.email}</div></div>
+          </div></td>
+          <td><span class="badge ${u.role==='Faculty'?'badge-blue':u.role==='Librarian'?'badge-teal':'badge-purple'}">${u.role}</span></td>
+          <td><span style="font-family:var(--font-mono);font-size:12px;font-weight:600;">${u.borrowed}</span></td>
+          <td><span style="color:${u.fines>0?'var(--coral)':'var(--green)'};font-weight:600;font-size:12px;">₹${u.fines}</span></td>
+          <td style="font-size:11px;color:var(--text3);font-weight:500;">${u.joined}</td>
+          <td><span class="badge ${u.status==='active'?'badge-green':'badge-red'}">${u.status}</span></td>
+          <td><div style="display:flex;gap:5px;">
+            <button class="btn btn-outline btn-sm" onclick="showToast('Editing ${u.name}','info')">Edit</button>
+            <button class="btn btn-outline btn-sm" style="color:var(--coral);border-color:#fecaca;" onclick="showToast('${u.name} suspended','warning')">Suspend</button>
+          </div></td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);margin-top:6px;">
+      <span style="font-size:11px;color:var(--text4);font-weight:500;">Showing 6 of 1,248 users</span>
+      <div style="display:flex;gap:3px;">${[1,2,3,'…',48].map((p,i)=>`<button class="btn btn-outline btn-sm" style="min-width:30px;padding:4px 7px;${i===0?'background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent);font-weight:700;':''}">${p}</button>`).join('')}</div>
+    </div>
+  </div>`;
+}
+
+function renderIssue(){
+  return`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div><h1 style="font-family:var(--font-display);font-size:19px;font-weight:800;color:var(--text);">Issue & Return</h1><p style="font-size:11px;color:var(--text4);margin-top:2px;font-weight:500;">Manage book circulation</p></div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-outline btn-sm" onclick="showToast('Scanner activated!','info')">📷 Scan Barcode</button>
+      <button class="btn btn-primary btn-sm" onclick="showToast('Quick issue mode enabled','success')">⚡ Quick Mode</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+    <div class="card">
+      <div class="chart-title" style="margin-bottom:14px;">📤 Issue Book</div>
+      <div class="form-group"><label class="form-label">Student / User</label><input class="form-input" placeholder="Search by name or ID…"></div>
+      <div class="form-group"><label class="form-label">Book ISBN or Title</label><input class="form-input" placeholder="Scan or enter ISBN…"></div>
+      <div class="form-group"><label class="form-label">Due Date</label><input class="form-input" type="date" value="2025-06-14"></div>
+      <div style="display:flex;gap:7px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="showToast('Book issued! Receipt sent via email.','success')">📤 Issue Book</button>
+        <button class="btn btn-outline" onclick="showToast('Receipt generated','info')">🧾 Receipt</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="chart-title" style="margin-bottom:14px;">📥 Return Book</div>
+      <div class="form-group"><label class="form-label">Book ISBN or Barcode</label><input class="form-input" placeholder="Scan or enter ISBN…"></div>
+      <div class="form-group"><label class="form-label">Condition</label>
+        <select class="form-select"><option>Good — No damage</option><option>Minor wear</option><option>Damaged — Fine applicable</option><option>Lost — Full replacement cost</option></select>
+      </div>
+      <div style="background:var(--green-bg);border-radius:var(--r2);padding:11px;margin-bottom:12px;border:1px solid #bbf7d0;">
+        <div style="font-size:10px;color:var(--text4);font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Fine Calculation</div>
+        <div style="font-size:20px;font-family:var(--font-display);font-weight:800;color:var(--text);margin-top:3px;">₹0.00</div>
+        <div style="font-size:11px;color:var(--green);font-weight:600;">Returned on time — no fine</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="showToast('Book returned! No fines.','success')">📥 Process Return</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="chart-header"><div class="chart-title">Currently Issued Books</div><span style="font-size:11px;color:var(--text4);font-weight:500;">2,891 total</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Book</th><th>Borrower</th><th>Issue Date</th><th>Due Date</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>${[
+          {book:'Atomic Habits',cover:'⚛️',user:'Arjun Sharma',issued:'2025-05-17',due:'2025-05-31',status:'due-today'},
+          {book:'Clean Code',cover:'🔧',user:'Rahul Mehta',issued:'2025-05-08',due:'2025-05-22',status:'overdue'},
+          {book:'The Lean Startup',cover:'🚀',user:'Meena Krishnan',issued:'2025-05-20',due:'2025-06-03',status:'active'},
+        ].map(r=>`<tr>
+          <td><div style="display:flex;align-items:center;gap:7px;"><span style="font-size:18px;">${r.cover}</span><span style="font-size:12px;font-weight:600;color:var(--text);">${r.book}</span></div></td>
+          <td style="font-size:12px;font-weight:500;">${r.user}</td>
+          <td style="font-size:11px;font-family:var(--font-mono);">${r.issued}</td>
+          <td style="font-size:11px;font-family:var(--font-mono);">${r.due}</td>
+          <td><span class="badge ${r.status==='overdue'?'badge-red':r.status==='due-today'?'badge-amber':'badge-green'}">${r.status==='due-today'?'Due today':r.status==='overdue'?'Overdue':'Active'}</span></td>
+          <td><div style="display:flex;gap:5px;">
+            <button class="btn btn-outline btn-sm" onclick="showToast('Renewed 14 days!','success')">Renew</button>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Return processed!','success')">Return</button>
+          </div></td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function renderReports(){
+  return`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div><h1 style="font-family:var(--font-display);font-size:19px;font-weight:800;color:var(--text);">Reports & Exports</h1><p style="font-size:11px;color:var(--text4);margin-top:2px;font-weight:500;">Generate detailed library reports</p></div>
+    <button class="btn btn-primary btn-sm" onclick="showToast('Scheduled report created!','success')">⏰ Schedule Report</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-bottom:18px;">
+    ${[
+      {icon:'📊',bg:'var(--accent-bg)',title:'Borrowing Report',desc:'Monthly and yearly borrowing trends, popular books, and peak times',type:'PDF'},
+      {icon:'👥',bg:'var(--teal-bg)',title:'User Activity Report',desc:'Active users, engagement rates, and reading habits analysis',type:'Excel'},
+      {icon:'💰',bg:'var(--amber-bg)',title:'Fine & Revenue Report',desc:'Fine collection, pending fines, and monthly revenue summary',type:'PDF'},
+      {icon:'📚',bg:'var(--green-bg)',title:'Inventory Report',desc:'Availability, overdue items, damaged books, and acquisition needs',type:'Excel'},
+      {icon:'⚠️',bg:'var(--coral-bg)',title:'Overdue Report',desc:'All overdue books with user details and accumulated fines',type:'PDF'},
+      {icon:'🔍',bg:'var(--purple-bg)',title:'Catalog Report',desc:'Complete book catalog with categories, conditions, and shelf locations',type:'CSV'},
+    ].map(r=>`<div class="report-card">
+      <div style="width:40px;height:40px;border-radius:10px;background:${r.bg};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${r.icon}</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;">${r.title}</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.5;margin-bottom:9px;">${r.desc}</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="btn btn-primary btn-sm" onclick="showToast('${r.title} generated!','success')">📥 Generate ${r.type}</button>
+          <span class="badge badge-blue">${r.type}</span>
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="chart-title" style="margin-bottom:12px;">Recent Reports</div>
+    <table><thead><tr><th>Report Name</th><th>Generated</th><th>Format</th><th>Size</th><th>Action</th></tr></thead>
+    <tbody>${[
+      {name:'May 2025 Borrowing Report',date:'Today, 9:00am',fmt:'PDF',size:'2.4 MB'},
+      {name:'Q1 2025 Analytics',date:'Yesterday',fmt:'Excel',size:'5.1 MB'},
+      {name:'Overdue Books — May',date:'2 days ago',fmt:'PDF',size:'890 KB'},
+      {name:'Full Inventory Export',date:'3 days ago',fmt:'CSV',size:'12.3 MB'},
+    ].map(r=>`<tr>
+      <td><span style="font-size:12px;font-weight:600;color:var(--text);">${r.name}</span></td>
+      <td style="font-size:11px;color:var(--text3);font-weight:500;">${r.date}</td>
+      <td><span class="badge badge-teal">${r.fmt}</span></td>
+      <td style="font-size:11px;color:var(--text4);font-family:var(--font-mono);">${r.size}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="showToast('Downloading…','info')">📥 Download</button></td>
+    </tr>`).join('')}</tbody></table>
+  </div>`;
+}
+
+function renderNotifications(){
+  return`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div><h1 style="font-family:var(--font-display);font-size:19px;font-weight:800;color:var(--text);">Notifications</h1><p style="font-size:11px;color:var(--text4);margin-top:2px;font-weight:500;">2 unread notifications</p></div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-outline btn-sm" onclick="showToast('All marked as read','info')">Mark all read</button>
+    </div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px;">
+    ${NOTIFICATIONS.map(n=>`<div class="notif-item ${n.unread?'unread':''}">
+      <div style="width:34px;height:34px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">${n.emoji}</div>
+      <div style="flex:1;"><div style="font-size:12px;color:var(--text);line-height:1.5;font-weight:${n.unread?600:400};">${n.text}</div><div style="font-size:10px;color:var(--text4);margin-top:2px;font-weight:500;">${n.time}</div></div>
+      ${n.unread?'<div class="unread-dot"></div>':''}
+    </div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="settings-section-title">Notification Preferences</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      ${[{k:'emailNotif',l:'Email Notifications',s:'Receive alerts via email'},{k:'smsAlert',l:'SMS Alerts',s:'Critical alerts via SMS'},{k:'overdueReminder',l:'Overdue Reminders',s:'Auto reminders before due date'},{k:'newBooks',l:'New Book Alerts',s:'Notify users of new arrivals'}].map(x=>`
+      <div class="settings-row"><div><div class="settings-label">${x.l}</div><div class="settings-sublabel">${x.s}</div></div>
+      <div class="toggle ${state.settingsToggles[x.k]?'on':''}" onclick="toggleSetting('${x.k}')"></div></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderSettings(){
+  return`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div><h1 style="font-family:var(--font-display);font-size:19px;font-weight:800;color:var(--text);">Settings</h1><p style="font-size:11px;color:var(--text4);margin-top:2px;font-weight:500;">System configuration and preferences</p></div>
+    <button class="btn btn-primary btn-sm" onclick="showToast('All settings saved!','success')">💾 Save Changes</button>
+  </div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="settings-section-title">Library Profile</div>
+        <div class="form-group"><label class="form-label">Library Name</label><input class="form-input" value="Central University Library"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-group"><label class="form-label">City</label><input class="form-input" value="Chennai"></div>
+          <div class="form-group"><label class="form-label">Timezone</label><select class="form-select"><option>IST (UTC+5:30)</option></select></div>
+        </div>
+        <div class="form-group"><label class="form-label">Contact Email</label><input class="form-input" value="library@university.edu"></div>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="settings-section-title">Borrowing Rules</div>
+        ${[{l:'Default Borrow Period',s:'Days before a book is due',v:'14 days'},{l:'Maximum Books per User',s:'Student limit',v:'3 books'},{l:'Fine per Day',s:'Overdue fine amount',v:'₹10/day'},{l:'Renewal Limit',s:'Times a book can be renewed',v:'2 times'}].map(x=>`
+        <div class="settings-row"><div><div class="settings-label">${x.l}</div><div class="settings-sublabel">${x.s}</div></div>
+        <input class="form-input" value="${x.v}" style="width:110px;text-align:right;"></div>`).join('')}
+      </div>
+      <div class="card">
+        <div class="settings-section-title">AI Configuration (Grok)</div>
+        <div class="form-group"><label class="form-label">Grok API Key</label><input class="form-input" type="password" placeholder="xai-…" value="xai-••••••••••••••••"></div>
+        ${[{k:'aiFeatures',l:'AI Recommendations',s:'Personalized book recommendations'},{k:'autoFine',l:'Auto Fine Calculation',s:'Automatically calculate and notify fines'},{k:'reservationAlert',l:'Smart Reservation Queue',s:'AI-managed waiting lists'}].map(x=>`
+        <div class="settings-row"><div><div class="settings-label">${x.l}</div><div class="settings-sublabel">${x.s}</div></div>
+        <div class="toggle ${state.settingsToggles[x.k]?'on':''}" onclick="toggleSetting('${x.k}')"></div></div>`).join('')}
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="settings-section-title">Appearance</div>
+        ${[{k:'darkMode',l:'Dark Mode',s:'Switch to dark interface'},{k:'emailNotif',l:'System Emails',s:'Send automated emails'}].map(x=>`
+        <div class="settings-row"><div><div class="settings-label">${x.l}</div><div class="settings-sublabel">${x.s}</div></div>
+        <div class="toggle ${state.settingsToggles[x.k]?'on':''}" onclick="toggleSetting('${x.k}')"></div></div>`).join('')}
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="settings-section-title">System Info</div>
+        ${[['Version','v2.5.0'],['Database','PostgreSQL 16'],['Storage','4.2 GB / 50 GB'],['Last Backup','Today 3:00 AM'],['Uptime','99.97%']].map(([k,v])=>`
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px;border-bottom:1px solid var(--border);">
+          <span style="color:var(--text3);font-weight:500;">${k}</span>
+          <span style="color:var(--text);font-family:var(--font-mono);font-weight:600;">${v}</span>
+        </div>`).join('')}
+      </div>
+      <div class="card" style="border-color:#fecaca;">
+        <div style="font-size:12px;font-weight:700;color:var(--coral);margin-bottom:9px;">⚠️ Danger Zone</div>
+        <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center;color:var(--coral);border-color:#fecaca;margin-bottom:7px;" onclick="showToast('Backup started…','info')">📦 Backup System</button>
+        <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center;color:var(--coral);border-color:#fecaca;" onclick="showToast('Please confirm this action','warning')">🗑️ Reset Database</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderHelp(){
+  return`<div style="max-width:780px;margin:0 auto;">
+  <div style="text-align:center;margin-bottom:28px;">
+    <h1 style="font-family:var(--font-serif);font-size:26px;font-weight:700;color:var(--text);margin-bottom:7px;">Help Center</h1>
+    <p style="font-size:13px;color:var(--text3);font-weight:500;">Find answers, guides, and support for BiblioSphere</p>
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:8px 13px;max-width:380px;margin:14px auto 0;">
+      <span style="color:var(--text4);">🔍</span>
+      <input style="background:none;border:none;outline:none;color:var(--text);font-size:13px;width:100%;font-family:var(--font-body);" placeholder="Search help articles…">
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:24px;">
+    ${[{icon:'📚',bg:'var(--accent-bg)',t:'Getting Started',d:'Set up your library in 10 min'},{icon:'🤖',bg:'var(--purple-bg)',t:'AI Features',d:'Master the AI assistant'},{icon:'📊',bg:'var(--teal-bg)',t:'Analytics Guide',d:'Understanding your metrics'},{icon:'⚙️',bg:'var(--amber-bg)',t:'Configuration',d:'Advanced settings'},{icon:'👥',bg:'var(--green-bg)',t:'User Management',d:'Roles and permissions'},{icon:'📋',bg:'var(--coral-bg)',t:'Reports',d:'Generating exports'}].map(f=>`
+    <div class="card" style="text-align:center;padding:18px 12px;cursor:pointer;">
+      <div style="width:40px;height:40px;border-radius:10px;background:${f.bg};display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 9px;">${f.icon}</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;">${f.t}</div>
+      <div style="font-size:11px;color:var(--text4);">${f.d}</div>
+    </div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="settings-section-title">Frequently Asked Questions</div>
+    ${[
+      {q:'How do I add books in bulk?',a:'Go to Books → Import CSV. Download the template, fill in book details, and upload. ISBNs are auto-validated on import.'},
+      {q:'How does the AI recommendation work?',a:'BiblioSphere uses Grok AI to analyze borrowing history, user preferences, and catalog metadata to suggest books via semantic similarity.'},
+      {q:'Can I set custom fine rates?',a:'Yes! Go to Settings → Borrowing Rules and set your fine amount per day, maximum fine cap, and grace period.'},
+      {q:'How do I generate reports for administration?',a:'Navigate to Reports, choose your report type and date range, then generate as PDF, Excel, or CSV. Monthly reports can be automated.'},
+    ].map((item,i)=>`<div style="border-bottom:1px solid var(--border);padding:13px 0;${i===3?'border-bottom:none;':''}">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;">❓ ${item.q}</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.7;padding-left:18px;">${item.a}</div>
+    </div>`).join('')}
+  </div>
+  <div style="text-align:center;margin-top:20px;padding:22px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border);">
+    <div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px;">Still need help?</div>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-weight:500;">Our support team responds within 2 hours on business days</p>
+    <div style="display:flex;gap:8px;justify-content:center;">
+      <button class="btn btn-primary" onclick="showToast('Opening support chat…','info')">💬 Live Chat</button>
+      <button class="btn btn-outline" onclick="showToast('Email opened','info')">📧 Email Support</button>
+    </div>
+  </div>
+</div>`;
+}
+
+function toggleSetting(k){state.settingsToggles[k]=!state.settingsToggles[k];render();showToast(`${k} ${state.settingsToggles[k]?'enabled':'disabled'}`,'info');}
+
+function render(){
+  const app=document.getElementById('app');if(!app)return;
+  if(state.page==='landing'){app.innerHTML=renderLanding();}
+  else if(state.page==='login'){app.innerHTML=renderLogin();}
+  else if(state.user){
+    const pages={dashboard:renderDashboard,books:renderBooks,ai:renderAI,analytics:renderAnalytics,users:renderUsers,issue:renderIssue,reports:renderReports,notifications:renderNotifications,settings:renderSettings,help:renderHelp};
+    app.innerHTML=renderApp((pages[state.page]||renderDashboard)());
+  } else {app.innerHTML=renderLogin();}
+  initCharts();
+}
+
+function initCharts(){
+  if(typeof Chart==='undefined')return;
+  Chart.defaults.color='#7a7268';
+  Chart.defaults.borderColor='rgba(0,0,0,0.06)';
+  if(document.getElementById('borrowChart')&&!document.getElementById('borrowChart').__c){
+    const ctx=document.getElementById('borrowChart');ctx.__c=true;
+    new Chart(ctx,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'2025',data:[42,67,55,89,73,91,84,103,78,95,110,88],borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,0.08)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'#2563eb'},{label:'2024',data:[35,52,48,71,65,78,72,88,68,82,95,76],borderColor:'#0d9488',backgroundColor:'transparent',tension:.4,borderDash:[4,4],pointRadius:2,pointBackgroundColor:'#0d9488'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{family:'Outfit',size:11}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:11}}}}}});
+  }
+  if(document.getElementById('catChart')&&!document.getElementById('catChart').__c){
+    const ctx=document.getElementById('catChart');ctx.__c=true;
+    new Chart(ctx,{type:'doughnut',data:{labels:['Technology','Sci-Fi','History','Programming','Self-Help','Other'],datasets:[{data:[18,15,14,11,10,32],backgroundColor:['#2563eb','#0d9488','#dc2626','#b45309','#15803d','#7c3aed'],borderWidth:2,borderColor:'#ffffff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{display:false}}}});
+  }
+  if(document.getElementById('weekChart')&&!document.getElementById('weekChart').__c){
+    const ctx=document.getElementById('weekChart');ctx.__c=true;
+    new Chart(ctx,{type:'bar',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Borrows',data:[45,67,89,72,55,38,20],backgroundColor:'rgba(37,99,235,0.15)',borderColor:'#2563eb',borderWidth:1.5,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{family:'Outfit',size:11}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:11}}}}}});
+  }
+}
+
+window.navigate=navigate;window.loginAs=loginAs;window.openSearch=openSearch;window.closeSearch=closeSearch;window.updateSearch=updateSearch;window.selectBook=selectBook;window.openBook=openBook;window.closeModal=closeModal;window.issueBook=issueBook;window.filterBooks=filterBooks;window.sendChat=sendChat;window.submitChat=submitChat;window.handleChatKey=handleChatKey;window.toggleSetting=toggleSetting;window.showToast=showToast;
+
+render();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" onload="initCharts()"></script>
+</body>
+</html>
